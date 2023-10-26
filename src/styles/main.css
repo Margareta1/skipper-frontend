@@ -1,0 +1,30 @@
+.login-main-container{
+    position: absolute;
+    top:0;
+    left:0;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    background-color: #f696b9;
+}
+
+.login-svg-container{
+    width: 50%;
+    display: flex;   
+    align-items: center;     
+    justify-content: center;  
+    overflow: hidden;           
+ position: relative;
+}
+.login-svg-container svg {
+    max-width: 90%;      
+    max-height: 90%;      
+}
+
+.login-form-container{
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

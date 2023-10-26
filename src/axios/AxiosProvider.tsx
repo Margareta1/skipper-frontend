@@ -1,10 +1,16 @@
-import axios from "axios";
+import axios, { Axios, AxiosInstance } from "axios";
+import { createContext, createElement } from "react";
 import { useCookies } from "react-cookie";
 
-export const getAgent = () => {
-  const [accessCookie, setAccessCookie] = useCookies(["access"]);
-  const [refreshCookie, setRefreshCookie] = useCookies(["refresh"]);
+interface AxiosContextProviderProps {
+    children: React.ReactNode;
+}
+export const AxiosContext = createContext<AxiosInstance>(axios);
 
+export const AxiosContextProvider: React.FC<AxiosContextProviderProps> = ({children}) =>{
+    const [accessCookie, setAccessCookie] = useCookies(["access"]);
+    const [refreshCookie, setRefreshCookie] = useCookies(["refresh"]);
+    
   const agent = axios.create({
     baseURL: "https://localhost:7016/api/",
   });
@@ -52,8 +58,8 @@ export const getAgent = () => {
   };
 
   agent.interceptors.response.use(
-    (response) => response,
-    async (error) => {
+    (response:any) => response,
+    async (error: any) => {
       const originalRequest = error.config;
 
       if (originalRequest.url.includes('Account/refresh') || originalRequest.headers.skipInterceptor) {
@@ -77,7 +83,7 @@ export const getAgent = () => {
     }
   );
 
-  agent.interceptors.request.use((config) => {
+  agent.interceptors.request.use((config: any) => {
     if (!config.headers.skipInterceptor && !config.headers.Retry) {
       config.headers.Authorization = `Bearer ${accessCookie?.access}`;
     }
@@ -87,5 +93,5 @@ export const getAgent = () => {
     return config;
   });
 
-  return agent;
-};
+  return createElement(AxiosContext.Provider, {value: agent}, children);
+}

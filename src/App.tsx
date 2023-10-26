@@ -1,28 +1,31 @@
-
-import axios from "axios";
-import { CookiesProvider, useCookies } from "react-cookie";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import OneFIle from "./features/OneFile";
-import SecondFIle from "./features/SecondFile";
-
-
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { AxiosContextProvider } from "./axios/AxiosProvider";
+import RequireAuth from "./axios/RequireAuth";
+import Login from "./features/Login/Login";
+import Dashboard from "./features/Basic/Dashboard";
+import "./styles/main.css"
 
 function App() {
 
+const queryClient = new QueryClient();
 
-  const [accessCookie, setAccessCookie] = useCookies(["access"]);
-  if (accessCookie) {
-    console.log(accessCookie.access);
-}
   return (
-    <BrowserRouter>
-    <CookiesProvider>
+    <QueryClientProvider client={queryClient}>
+      <AxiosContextProvider>
+    <Router>
       <Routes>
-        <Route path='/' element={<OneFIle />} />
-        <Route path='/two' element={<SecondFIle />} />
+        <Route path="/login" element={<Login />}></Route>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route element={<RequireAuth allowedRoles={["Member"]} />}>
+            <Route path="/dashboard" index element={<Dashboard />} />
+            <Route path="*" element={<Navigate to="/dashboard" />} />
+
+        </Route>
       </Routes>
-      </CookiesProvider>
-    </BrowserRouter>
+    </Router>
+    </AxiosContextProvider>
+    </QueryClientProvider>
   );
 }
 
