@@ -1,7 +1,7 @@
 import { useCookies } from "react-cookie";
 import { decodeToken } from "../util/decode-token";
 import { Navigate, Outlet } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DecodedTokenType } from "../types/DecodedTokenType";
 
 interface RequireAuthProps {
@@ -13,13 +13,18 @@ const RequireAuth: React.FC<RequireAuthProps> = ({allowedRoles}) =>{
   const[token, setToken] = useState<DecodedTokenType>();
   const [hasMatch, setHasMatch] = useState<boolean>();
   const current = new Date(Date.now());
+  let isAuthenticated = false;
   try{
-      setToken(decodeToken(accessCookie?.access));
-      setHasMatch(allowedRoles?.some(item => token?.Roles.includes(item)));
+      let token = decodeToken(accessCookie?.access);
+      let hasMatch = allowedRoles?.some(item => token?.Roles.includes(item));
+      if(token && token.Expiration > current && hasMatch){
+        isAuthenticated=true;
+      }
     }
     catch(error){
     }
-  return token && token.Expiration > current && hasMatch ? (<Outlet />) : (<Navigate to="login" />)
+  return  isAuthenticated ? (<Outlet />) : (<Navigate to="login" />)
 }
+
 
 export default RequireAuth;

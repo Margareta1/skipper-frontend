@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AxiosContextProvider } from "./axios/AxiosProvider";
-import RequireAuth from "./axios/RequireAuth";
 import Login from "./features/Login/Login";
 import Dashboard from "./features/Basic/Dashboard";
 import "./styles/main.css"
+import RequireAuth from "./axios/RequireAuth";
 
 function App() {
 

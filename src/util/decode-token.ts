@@ -7,5 +7,5 @@ export const decodeToken = (token: string) :DecodedTokenType => {
     const roles =
       payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
     const expirationDate = new Date(payload.exp * 1000);
-    return { Roles: roles, Expiration: expirationDate };
+    return {Expiration: expirationDate, Roles: roles}
  };
