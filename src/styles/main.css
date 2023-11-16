@@ -139,10 +139,16 @@ height: auto;
     flex-direction: row;
     justify-content: space-around;
     padding-top: 2rem;
+    padding-bottom: 4rem;
 }
     
 .admin-button{
     padding: 20px;
     border: #454445 solid 3px;
     border-radius: 15px;
+}
+
+.admin-line{
+    width: 70%;
+    padding: 2rem 0;
 }
