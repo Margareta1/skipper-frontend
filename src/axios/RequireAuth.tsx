@@ -3,6 +3,7 @@ import { decodeToken } from "../util/decode-token";
 import { Navigate, Outlet } from "react-router";
 import { useEffect, useState } from "react";
 import { DecodedTokenType } from "../types/DecodedTokenType";
+import Navigation from "../features/Basic/Navigation";
 
 interface RequireAuthProps {
     allowedRoles: string[] | null;
@@ -20,10 +21,11 @@ const RequireAuth: React.FC<RequireAuthProps> = ({allowedRoles}) =>{
       if(token && token.Expiration > current && hasMatch){
         isAuthenticated=true;
       }
+      console.log(token, hasMatch);
     }
     catch(error){
     }
-  return  isAuthenticated ? (<Outlet />) : (<Navigate to="login" />)
+  return  isAuthenticated ? (<><Navigation /> <Outlet /></>) : (<Navigate to="login" />)
 }
 
 

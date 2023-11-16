@@ -5,6 +5,14 @@ import Login from "./features/Login/Login";
 import Dashboard from "./features/Basic/Dashboard";
 import "./styles/main.css"
 import RequireAuth from "./axios/RequireAuth";
+import ErrorPage from "./features/Basic/ErrorPage";
+import CV from "./features/CV/CV";
+import ProfileOverview from "./features/Employee/ProfileOverview";
+import ProjectOverview from "./features/Project/ProjectOverview";
+import EmployeeOverview from "./features/Employee/EmployeeOverview";
+import SingleProjectView from "./features/Project/SingleProjectView";
+import LineOverview from "./features/LineManagement/LineOverview";
+import Administration from "./features/Administration/Administration";
 
 function App() {
 
@@ -17,11 +25,24 @@ const queryClient = new QueryClient();
       <Routes>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/error" element={<ErrorPage />} />
         <Route element={<RequireAuth allowedRoles={["Member"]} />}>
             <Route path="/dashboard" index element={<Dashboard />} />
+            <Route path="/profile" index element={<ProfileOverview />} />
+            <Route path="/projects" index element={<ProjectOverview />} />
+            <Route path="/employees" index element={<EmployeeOverview />} />
+            <Route path="/cv/:id" index element={<CV />} />
+            <Route path="/project/:id" index element={<SingleProjectView />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
+          </Route>
+        <Route element={<RequireAuth allowedRoles={["Admin"]} />}>
+            <Route path="/administration" index element={<Administration />} />
+          </Route>
+          
+        <Route element={<RequireAuth allowedRoles={["Manager"]} />}>
+            <Route path="/management" index element={<LineOverview />} />
+          </Route>
 
-        </Route>
       </Routes>
     </Router>
     </AxiosContextProvider>

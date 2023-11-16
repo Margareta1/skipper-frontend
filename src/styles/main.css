@@ -1,3 +1,7 @@
+*{
+    font-family: cursive;
+}
+
 .login-main-container{
     position: absolute;
     top:0;
@@ -27,4 +31,118 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.navigation-bar{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 4rem;
+    background-color: #454445;
+}
+
+.navigation-dashboard{
+    height: 4em;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    color: #f6bdd2;
+
+}
+
+.penguin-button:hover{
+    color:#D07395;
+}
+
+.navigation-drawer-div{
+    display: flex;
+    flex-direction: column;
+}
+
+.drawer-navlink{
+    padding: 10px;
+}
+
+.dashboard-main-div{
+    margin-top: 4rem;
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    bottom: 0;
+    height: auto;
+    background-color: rgb(177, 177, 177);
+}
+.div-buttons-container{
+    padding-top: 3rem;
+width: 70%;
+display:grid;
+grid-template-columns: repeat(2, 50%);
+justify-items: center;
+height: auto;
+}
+
+.dashboard-div{
+    padding: 20px;
+    border: 1px solid rgb(220, 219, 219);
+    border-radius: 4px;
+    box-shadow: rgba(208, 115, 149, 0.2) 0px 2px 8px 0px;
+    width: 70%;
+    height: 8rem;
+    text-align: center;
+    justify-content: center;
+    margin: 1rem;
+    display:flex;
+    flex-direction: column;
+    color:#000000;
+    font-size: larger;
+    font-weight: 600;
+    background-color: rgb(192, 191, 191);
+}
+
+.dashboard-div:hover{
+    box-shadow: rgba(208, 115, 149, 0.2) 0px 48px 100px 0px;
+
+}
+
+.employee-overview-main-div{
+    margin-top: 4rem;
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 4rem;
+    padding-top: 20px;
+}
+
+.single-project-div {
+    margin-top: 1rem;
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10rem;
+}
+
+.admin-buttons-div{
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-top: 2rem;
+}
+    
+.admin-button{
+    padding: 20px;
+    border: #454445 solid 3px;
+    border-radius: 15px;
 }

@@ -80,12 +80,6 @@ const Login: React.FC<LoginProps> = () => {
               name="username"
               rules={[
                 { required: true, message: "Please input your username!" },
-                {
-                  pattern: RegExp(
-                    "^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]"
-                  ),
-                  message: "Please enter a valid username!",
-                },
               ]}
             >
               <Input />

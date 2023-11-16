@@ -19,9 +19,7 @@ export const useLogin = () =>{
             console.log(error);
         }
     };
-
     return useMutation(login, {
         onError: (error) => console.log(error)
     });
-
 }
