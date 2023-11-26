@@ -6,7 +6,6 @@ export const useGetAllLines = () =>{
     const getAllLines = async() =>{
         try{
             const {data} = await agent.get('employee/getalllines');
-            console.log(data);
             return data;
         }
         catch(error){

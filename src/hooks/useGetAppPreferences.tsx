@@ -1,11 +1,11 @@
 import { useQuery } from "react-query";
 import { useAxios } from "../axios/useAxios";
 
-export const useGetAllEmployees = () =>{
+export const useGetAppPreferences = () =>{
     const agent = useAxios();
-    const getAllEmployees = async() =>{
+    const getAppPreferences = async() =>{
         try{
-            const {data} = await agent.get('employee/getallemployees');
+            const {data} = await agent.get('general/getapppreferences');
             return data;
         }
         catch(error){
@@ -14,7 +14,7 @@ export const useGetAllEmployees = () =>{
         return;
     }
 
-    return useQuery(['employees'], ()=>getAllEmployees(), {
+    return useQuery(['apppreferences'], ()=>getAppPreferences(), {
         onError: (error)=> console.log(error),
         staleTime:Infinity,
         enabled:true,

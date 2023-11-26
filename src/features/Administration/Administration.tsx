@@ -1,4 +1,4 @@
-import { Button, Modal, Skeleton } from "antd";
+import { Button, Input, Modal, Select, Skeleton } from "antd";
 import { useState } from "react";
 import AddProjectForm from "./AddProjectForm";
 import AddSkillForm from "./AddSkillForm";
@@ -6,6 +6,12 @@ import AddUserForm from "./AddUserForm";
 import AddLanguageForm from "./AddLanguageForm";
 import AddLineForm from "./AddLineForm";
 import { useGetAllLines } from "../../hooks/useGetAllLines";
+import { useGetAppPreferences } from "../../hooks/useGetAppPreferences";
+import { useUpdateAppPreferences } from "../../hooks/useUpdateAppPreferences";
+import { CiCirclePlus } from "react-icons/ci";
+import { useGetAllEmployees } from "../../hooks/useGetAllEmployees";
+import { useAddEmployeeToLine } from "../../hooks/useAddEmployeeToLine";
+import { AddEmployeeToLineType } from "../../types/AddEmployeeToLineType";
 
 interface AppSettingsManagementProps {
 
@@ -18,9 +24,13 @@ const Administration: React.FC<AppSettingsManagementProps> =() =>{
     const [seeAddUser, setSeeAddUser] = useState(false);
     const [seeAddLanguage, setSeeAddLanguage] = useState(false);
     const [seeAddLine, setSeeAddLine] = useState(false);
+    const [seeAddEmployeeToLine, setSeeAddEmployeeToLine] = useState(false);
     const {data, isLoading} = useGetAllLines();
+    const {data: appPref, isLoading: isLoadingAppPref} = useGetAppPreferences();
+    const {data:employees, isLoading:isLoadingEmployees} = useGetAllEmployees();
 
-
+    const updateAppPreferences = useUpdateAppPreferences();
+    const addEmployeeToLine = useAddEmployeeToLine();
     const showAddProject = () => {
         setSeeAddProject(true);
     };
@@ -78,7 +88,29 @@ const Administration: React.FC<AppSettingsManagementProps> =() =>{
         setSeeAddLine(false);
     };
 
-    return (isLoading ? <Skeleton /> :  <div className="dashboard-main-div">
+    const showAddEmployeeToLine = () => {
+        setSeeAddEmployeeToLine(true);
+    };
+  
+    const handleOkAddEmployeeToLine = () => {
+        setSeeAddEmployeeToLine(false);
+    };
+  
+    const handleCancelAddEmployeeToLine = () => {
+        setSeeAddEmployeeToLine(false);
+    };
+
+    const handleUpdate = (value:string, prop: string)=>{
+        updateAppPreferences.mutate({...appPref, [prop]:value});
+    }
+
+    const handleAddEmployee = (value:any, lineManager:string)=>{
+        const newValue: AddEmployeeToLineType = {EmployeeUsername:value, ManagerUsername:lineManager};
+        console.log("new value", newValue);
+        addEmployeeToLine.mutate(newValue);
+    }
+
+    return (isLoading || isLoadingAppPref || isLoadingEmployees ? <Skeleton /> :  <div className="dashboard-main-div">
         <h2>Administration</h2>
         <div className="admin-buttons-div">
             <div className="admin-button"><Button ghost type="text" size="large" onClick={showAddProject}>Add project</Button></div>
@@ -135,6 +167,35 @@ const Administration: React.FC<AppSettingsManagementProps> =() =>{
         </div>
         <div className="admin-line">
             <h4 style={{textAlign:"start"}}>Manage lines</h4>
+            {data.map((x:any)=>{
+                 return <div className="line-container">
+                    <p>Manager: {x.lineManager.email}</p>
+                    <p>Employees: {x.employees.map((y:any)=> <span className="employee-span"> {y.email}</span>)} </p>
+                    <Button onClick={showAddEmployeeToLine} style={{fontSize:"larger"}}><CiCirclePlus /></Button>
+                    <Modal 
+                        title="Choose employee" 
+                        open={seeAddEmployeeToLine} 
+                        onOk={handleOkAddEmployeeToLine} 
+                        onCancel={handleCancelAddEmployeeToLine} 
+                        width={"500px"}
+                        footer={[<Button onClick={handleCancelAddEmployeeToLine}>Cancel</Button>]}>
+                        <Select style={{ width: "400px" }} placeholder={"Select employee"} onChange={(e:any) =>{
+                            handleAddEmployee(e, x.lineManager.email);
+                        }}>
+                        {employees.map((data: any) => (
+                        <Select.Option key={data.user.email} value={data.user.email}>
+                            {data.user.email}
+                        </Select.Option>
+                        ))}
+                    </Select>
+                    </Modal>
+                    </div>
+            })}
+        </div>
+        <div className="admin-app-pref">
+            <h4 style={{textAlign:"start"}}>Manage app preferences</h4>
+            <p className="admin-app-pref-p">Company name: <Input defaultValue={appPref.companyName} onChange={(val:any)=>{handleUpdate(val.target.value, "companyName")}} /></p>
+            <p className="admin-app-pref-p">Rgb: <Input defaultValue={appPref.rgb} /></p>
         </div>
     </div>)
 }

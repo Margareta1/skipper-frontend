@@ -6,7 +6,6 @@ export const useGetAllProjects = () =>{
     const getAllProjects = async() =>{
         try{
             const {data} = await agent.get('project/getprojects');
-            console.log(data);
             return data;
         }
         catch(error){

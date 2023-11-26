@@ -21,9 +21,9 @@ const RequireAuth: React.FC<RequireAuthProps> = ({allowedRoles}) =>{
       if(token && token.Expiration > current && hasMatch){
         isAuthenticated=true;
       }
-      console.log(token, hasMatch);
     }
     catch(error){
+      console.log(error)
     }
   return  isAuthenticated ? (<><Navigation /> <Outlet /></>) : (<Navigate to="login" />)
 }
