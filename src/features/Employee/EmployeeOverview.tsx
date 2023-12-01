@@ -1,5 +1,4 @@
-import { Table } from "antd";
-import { useGetAllEmployees } from "../../hooks/useGetAllEmployees";
+import { Skeleton, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { SearchOutlined } from '@ant-design/icons';
 import React, { useRef, useState } from 'react';
@@ -9,121 +8,15 @@ import type { ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { useNavigate } from "react-router";
+import { useGetEmployeeOverview } from "../../hooks/useGetEmployeeOverview";
+import { EmployeeOverviewType } from "../../types/EmployeeOverviewType";
 
-
-interface DataType {
-    key: string;
-    name: string;
-    projects:string;
-    utilizationType:string;
-    utilizationAmount:number;
-    languages: string;
-    skills:string;
-  }
-  
-  type DataIndex = keyof DataType;
-  
-  const dummyData: DataType[] = [
-    {
-      key: '1',
-      name: 'John Doe',
-      projects: 'Time Tracker, HR Dashboard, E-commerce Platform',
-      utilizationType: 'Full-time',
-      utilizationAmount: 80,
-      languages: 'English, German, Spanish',
-      skills: 'HTML, JavaScript, React, .NET',
-    },
-    {
-      key: '2',
-      name: 'Jane Smith',
-      projects: 'Inventory Management, CRM System',
-      utilizationType: 'Part-time',
-      utilizationAmount: 50,
-      languages: 'English, French',
-      skills: 'Java, Python, Database Management',
-    },
-    {
-      key: '3',
-      name: 'Alice Johnson',
-      projects: 'E-learning Platform, Mobile App Development',
-      utilizationType: 'Full-time',
-      utilizationAmount: 100,
-      languages: 'English, Spanish',
-      skills: 'JavaScript, React Native, Ruby on Rails',
-    },
-    {
-      key: '4',
-      name: 'Bob Williams',
-      projects: 'E-commerce Website, Content Management System',
-      utilizationType: 'Full-time',
-      utilizationAmount: 90,
-      languages: 'English, Italian',
-      skills: 'HTML/CSS, JavaScript, PHP, WordPress',
-    },
-    {
-      key: '5',
-      name: 'Eva Davis',
-      projects: 'Online Booking System, Data Analytics Dashboard',
-      utilizationType: 'Part-time',
-      utilizationAmount: 60,
-      languages: 'English, Spanish, Portuguese',
-      skills: 'Python, Data Analysis, Machine Learning',
-    },
-    {
-      key: '6',
-      name: 'Mike Wilson',
-      projects: 'E-commerce Platform, Inventory Management',
-      utilizationType: 'Full-time',
-      utilizationAmount: 100,
-      languages: 'English, French, German',
-      skills: 'Java, Python, Spring Boot, SQL',
-    },
-    {
-      key: '7',
-      name: 'Olivia Brown',
-      projects: 'HR Management System, Event Registration Website',
-      utilizationType: 'Part-time',
-      utilizationAmount: 40,
-      languages: 'English, Spanish',
-      skills: 'HTML/CSS, JavaScript, React, Node.js',
-    },
-    {
-      key: '8',
-      name: 'Daniel Lee',
-      projects: 'E-commerce Website, Content Management System',
-      utilizationType: 'Full-time',
-      utilizationAmount: 70,
-      languages: 'English, Chinese',
-      skills: '.NET, C#, SQL Server, Azure',
-    },
-    {
-      key: '9',
-      name: 'Sophia Hall',
-      projects: 'Social Media App, E-commerce Platform',
-      utilizationType: 'Full-time',
-      utilizationAmount: 95,
-      languages: 'English, Spanish',
-      skills: 'HTML/CSS, JavaScript, React, Node.js, AWS',
-    },
-    {
-      key: '10',
-      name: 'William Turner',
-      projects: 'Online Learning Platform, E-commerce Website',
-      utilizationType: 'Part-time',
-      utilizationAmount: 60,
-      languages: 'English, German',
-      skills: 'Java, Spring Boot, JavaScript, Angular',
-    },
-  ];
+type DataIndex = keyof EmployeeOverviewType;
 
 const EmployeeOverview: React.FC =() =>{
-    // const {data:employeeData, isLoading} = useGetAllEmployees();
-    // if(employeeData){
-    //   console.log(employeeData);
-    // }
+    const {data:employeeData, isLoading} = useGetEmployeeOverview();
 
     const navigate = useNavigate();
-
     
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -144,7 +37,7 @@ const EmployeeOverview: React.FC =() =>{
       setSearchText('');
     };
   
-    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
+    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<EmployeeOverviewType> => ({
       filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
         <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
           <Input
@@ -222,7 +115,7 @@ const EmployeeOverview: React.FC =() =>{
         ),
     });
   
-    const columns: ColumnsType<DataType> = [
+    const columns: ColumnsType<EmployeeOverviewType> = [
       {
         title: 'Name',
         dataIndex: 'name',
@@ -274,12 +167,11 @@ const EmployeeOverview: React.FC =() =>{
     ];
     
 
-
-    return  <div className="employee-overview-main-div">
-        <Table columns={columns} dataSource={dummyData} style={{width:"90%"}} />
-    </div>;
+    return ( isLoading? <Skeleton /> : <div className="employee-overview-main-div">
+        <Table columns={columns} dataSource={employeeData} style={{width:"90%"}} onRow={(record)=>({
+          onClick:()=>(console.log("row clicked!", record)) //TODO
+        })} />
+    </div>);
 }
 
 export default EmployeeOverview;
-
-

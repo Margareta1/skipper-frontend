@@ -11,7 +11,6 @@ export const useGetAllEmployees = () =>{
         catch(error){
             throw error;
         }
-        return;
     }
 
     return useQuery(['employees'], ()=>getAllEmployees(), {

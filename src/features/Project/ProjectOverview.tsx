@@ -1,5 +1,4 @@
-import { Table } from "antd";
-import { useGetAllEmployees } from "../../hooks/useGetAllEmployees";
+import { Skeleton, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { SearchOutlined } from '@ant-design/icons';
 import React, { useRef, useState } from 'react';
@@ -8,109 +7,15 @@ import { Button, Input, Space } from 'antd';
 import type { ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
-import { useNavigate } from "react-router";
-import { text } from "stream/consumers";
 import { NavLink } from "react-router-dom";
+import { ProjectOverviewType } from "../../types/ProjectOverviewType";
+import { useGetProjectOverview } from "../../hooks/useGetProjectOverview";
 
-
-interface DataType {
-    key: string;
-    name: string;
-    description:string;
-    tags:string;
-    active:string;
-    hiring:string;
-  }
-  
-  type DataIndex = keyof DataType;
-
-  const dummyData: DataType[] = [
-    {
-      key: '1',
-      name: 'WebDev Solutions',
-      description: 'Specializing in custom web development for small and medium-sized businesses.',
-      tags: 'E-commerce, Content Management Systems, Web Design',
-      active: "true",
-      hiring: "false",
-    },
-    {
-      key: '2',
-      name: 'DigitalCraft Web Studio',
-      description: 'Crafting digital experiences that drive engagement and results.',
-      tags: 'Responsive Web Design, Mobile Apps, SEO',
-      active: "true",
-      hiring: "false",
-    },
-    {
-      key: '3',
-      name: 'TechPulse Innovations',
-      description: 'Innovative web and mobile app development agency delivering cutting-edge solutions.',
-      tags: 'Web Development, Mobile Apps, Software Solutions',
-      active: "true",
-      hiring: "true",
-    },
-    {
-      key: '4',
-      name: 'CodeMasters Inc.',
-      description: 'Your partner for creating beautiful and functional websites.',
-      tags: 'Frontend Development, UI/UX Design, Web Apps',
-      active: "true",
-      hiring: "true",
-    },
-    {
-      key: '5',
-      name: 'PixelPerfect Design Studios',
-      description: 'Turning your web and mobile design visions into pixel-perfect realities.',
-      tags: 'Web Design, Graphic Design, Branding',
-      active: "true",
-      hiring: "false",
-    },
-    {
-      key: '6',
-      name: 'InfiniteBytes Web Solutions',
-      description: 'Creating web solutions that push the boundaries of technology.',
-      tags: 'Web Development, Cloud Integration, E-commerce',
-      active: "true",
-      hiring: "true",
-    },
-    {
-      key: '7',
-      name: 'WebWizards Hub',
-      description: 'Unleash the magic of the web with our wizardry in web development.',
-      tags: 'Web Development, SEO, E-commerce',
-      active: "true",
-      hiring: "false",
-    },
-    {
-      key: '8',
-      name: 'WebCrafters Inc.',
-      description: 'Crafting web experiences that inspire and engage your audience.',
-      tags: 'Frontend Development, Content Management Systems, UI/UX Design',
-      active: "true",
-      hiring: "true",
-    },
-    {
-      key: '9',
-      name: 'CyberWeb Innovators',
-      description: 'Innovative web solutions for the modern digital landscape.',
-      tags: 'Web Development, Cybersecurity, Mobile Apps',
-      active: "true",
-      hiring: "false",
-    },
-    {
-      key: '10',
-      name: 'FusionWeb Creations',
-      description: 'Creating unique web and mobile experiences that stand out.',
-      tags: 'Web Development, Mobile App Design, E-commerce',
-      active: "true",
-      hiring: "true",
-    },
-  ];
+  type DataIndex = keyof ProjectOverviewType;
 
 const ProjectOverview: React.FC =() =>{
 
-    const navigate = useNavigate();
-
+  const {data, isLoading} = useGetProjectOverview();
     
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -131,7 +36,7 @@ const ProjectOverview: React.FC =() =>{
       setSearchText('');
     };
   
-    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
+    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<ProjectOverviewType> => ({
       filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
         <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
           <Input
@@ -209,60 +114,56 @@ const ProjectOverview: React.FC =() =>{
         ),
     });
   
-    const columns: ColumnsType<DataType> = [
+    const columns: ColumnsType<ProjectOverviewType> = [
       {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
-        ...getColumnSearchProps('name'),
-        sorter: (a, b) => a.name.localeCompare(b.name),
+        ...getColumnSearchProps('Name'),
+        sorter: (a, b) => a.Name.localeCompare(b.Name),
         sortDirections: ['descend', 'ascend'],
-        render: (text:any, render: DataType)=>{
+        render: (text:any, render: any)=>{
             return  <NavLink  to={`/project/${render.key}`} className={"drawer-navlink"}>{render.name}</NavLink>
         },
       },
       {
         title: 'Description',
         dataIndex: 'description',
-        key: 'projedescriptioncts',
-        ...getColumnSearchProps('description'),
-        sorter: (a, b) => a.description.localeCompare(b.description),
+        key: 'description',
+        ...getColumnSearchProps('Description'),
+        sorter: (a, b) => a.Description.localeCompare(b.Description),
         sortDirections: ['descend', 'ascend'],
       },
       {
         title: 'Tags',
         dataIndex: 'tags',
         key: 'tags',
-        ...getColumnSearchProps('tags'),
-        sorter: (a, b) => a.tags.localeCompare(b.tags),
+        ...getColumnSearchProps('Tags'),
+        sorter: (a, b) => a.Tags.localeCompare(b.Tags),
         sortDirections: ['descend', 'ascend'],
       },
       {
         title: 'Active',
         dataIndex: 'active',
         key: 'active',
-        ...getColumnSearchProps('active'),
-        sorter: (a, b) => Number(a.active) - Number(b.active),
+        ...getColumnSearchProps('Active'),
+        sorter: (a, b) => a.Active.localeCompare(b.Active),
         sortDirections: ['descend', 'ascend'],
       },
       {
         title: 'Hiring',
         dataIndex: 'hiring',
         key: 'hiring',
-        ...getColumnSearchProps('hiring'),
-        sorter: (a, b) => Number(a.hiring) - Number(b.hiring),
+        ...getColumnSearchProps('Hiring'),
+        sorter: (a, b) => a.Hiring.localeCompare(b.Hiring),
         sortDirections: ['descend', 'ascend'],
+
       },
     ];
-    
 
-    // const {data, isLoading} = useGetAllProjects();
-    // if(data){
-    //     console.log(data);
-    // }
-    return   <div className="employee-overview-main-div">
-    <Table columns={columns} dataSource={dummyData} style={{width:"90%"}}/>
-</div>;
+    return   (isLoading ? <Skeleton /> :<div className="employee-overview-main-div">
+    <Table columns={columns} dataSource={data} style={{width:"90%"}}/>
+</div>);
 }
 
 export default ProjectOverview;

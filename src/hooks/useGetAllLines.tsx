@@ -11,7 +11,6 @@ export const useGetAllLines = () =>{
         catch(error){
             throw error;
         }
-        return;
     }
 
     return useQuery(['lines'], ()=>getAllLines(), {

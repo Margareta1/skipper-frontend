@@ -1,11 +1,11 @@
 import { useQuery } from "react-query";
 import { useAxios } from "../axios/useAxios";
 
-export const useGetAppPreferences = () =>{
+export const useGetProjectEmployees = (id:string | undefined) =>{
     const agent = useAxios();
-    const getAppPreferences = async() =>{
+    const getProjectEmployees = async(id:string) =>{
         try{
-            const {data} = await agent.get('general/getapppreferences');
+            const {data} = await agent.get(`project/getprojectemployees/${id}`);
             return data;
         }
         catch(error){
@@ -13,7 +13,7 @@ export const useGetAppPreferences = () =>{
         }
     }
 
-    return useQuery(['apppreferences'], ()=>getAppPreferences(), {
+    return useQuery(['projempl', id], ()=>getProjectEmployees(id!), {
         onError: (error)=> console.log(error),
         staleTime:Infinity,
         enabled:true,

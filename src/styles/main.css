@@ -175,3 +175,20 @@ height: auto;
     padding-left: 1rem;
     padding-right: 1rem;
 }
+
+.input-proj-comment{
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+}
+
+.add-employee-to-proj{
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    border:2px black solid;
+    margin-left: 10%;
+    border-radius: 4px;
+    justify-content: center;
+    padding:1rem;
+}
