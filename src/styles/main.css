@@ -135,27 +135,31 @@ height: auto;
 }
 
 .admin-buttons-div{
-    width: 70%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    padding-top: 2rem;
-    padding-bottom: 4rem;
 }
     
 .admin-button{
     padding: 20px;
-    border: #454445 solid 3px;
+    background-color: #878585;
+    color:white;
     border-radius: 15px;
+    font-weight: 900;
+    display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-button:hover{
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
 }
 
 .admin-line{
-    width: 70%;
-    padding: 2rem 0;
+    padding: 1rem 0;
 }
 
 .admin-app-pref{
-    width: 70%;
     padding: 2rem 0;
 }
 
@@ -186,9 +190,32 @@ height: auto;
     width: 80%;
     display: flex;
     flex-direction: row;
-    border:2px black solid;
-    margin-left: 10%;
-    border-radius: 4px;
     justify-content: center;
     padding:1rem;
+    margin-top: 2rem;
+    align-items: center;
+}
+
+.administration-inner-div{
+    width: 80%;
+    background-color: #e8e8e8;
+    border-radius: 4px;
+    padding: 1rem;
+    margin:1rem;
+}
+
+.font-weight-900{
+    font-weight: 900;
+}
+
+.employees-list{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.employee-email-display{
+    background-color: white;
+    border-radius: 4px;
+    padding: 5px;
 }
