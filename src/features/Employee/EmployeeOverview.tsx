@@ -7,7 +7,6 @@ import { Button, Input, Space } from 'antd';
 import type { ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
-import { useNavigate } from "react-router";
 import { useGetEmployeeOverview } from "../../hooks/useGetEmployeeOverview";
 import { EmployeeOverviewType } from "../../types/EmployeeOverviewType";
 
@@ -15,9 +14,6 @@ type DataIndex = keyof EmployeeOverviewType;
 
 const EmployeeOverview: React.FC =() =>{
     const {data:employeeData, isLoading} = useGetEmployeeOverview();
-
-    const navigate = useNavigate();
-    
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
@@ -169,7 +165,7 @@ const EmployeeOverview: React.FC =() =>{
 
     return ( isLoading? <Skeleton /> : <div className="employee-overview-main-div">
         <Table columns={columns} dataSource={employeeData} style={{width:"90%"}} onRow={(record)=>({
-          onClick:()=>(console.log("row clicked!", record)) //TODO
+          onClick:()=>(console.log("row clicked!", record))
         })} />
     </div>);
 }

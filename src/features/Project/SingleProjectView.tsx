@@ -24,6 +24,7 @@ import { AddEmployeeToProject } from "../../types/AddEmployeeToProject";
 import { useAddEmployeeToProject } from "../../hooks/useAddEmployeeToProject";
 import HiringPostApplicants from "./HiringPostApplicants";
 import AddHiringPost from "./AddHiringPost";
+import jsPDF from "jspdf";
 
 const SingleProjectView: React.FC = () => {
   const { id } = useParams();
@@ -93,6 +94,19 @@ const SingleProjectView: React.FC = () => {
     };
     addEmployeeToProject.mutate(newVal);
   };
+
+  const generatePDF = () => {
+    const report = new jsPDF('landscape', 'pt', 'a4', true);
+    const content = document.getElementById('report'); 
+  
+    if (content) {
+      report.html(content, {
+        callback: () => {
+          report.save('project-report.pdf');
+        },
+      });
+    }
+  };
   return isLoadingProject ||
     isLoadingEmployees ||
     isLoadingComments ||
@@ -103,7 +117,7 @@ const SingleProjectView: React.FC = () => {
     isLoadingAllEmployees ? (
     <Skeleton />
   ) : (
-    <div className="dashboard-main-div">
+    <div className="dashboard-main-div" id="report">
       <h2 style={{ fontWeight: "900" }}>PROJECT OVERVIEW: {project.name}</h2>
       <div
         style={{
@@ -295,6 +309,8 @@ const SingleProjectView: React.FC = () => {
       </div>
       <div className="administration-inner-div">
         <h3 style={{ textAlign: "center" }}>REPORTING</h3>
+        <Button onClick={generatePDF}>Export PDF</Button>
+
       </div>
     </div>
   );

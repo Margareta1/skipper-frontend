@@ -1,11 +1,10 @@
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { loginInput, useLogin } from "../../hooks/useLogin";
 import { useCookies } from "react-cookie";
 import { Navigate, useNavigate } from "react-router";
 import { decodeToken } from "../../util/decode-token";
 import ManagerIcon from "../../components/ManagerIcon";
-import { useEffect, useRef, useState } from "react";
 
 interface LoginProps {}
 
@@ -27,7 +26,6 @@ const Login: React.FC<LoginProps> = () => {
   const [refreshCookie, setRefreshCookie] = useCookies(["refresh"]);
 
   const onFinish = (values: loginInput) => {
-    console.log("Success:", values);
 
     const tokens = login.mutate(values, {
       onSuccess: (data: any) => {

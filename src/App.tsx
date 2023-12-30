@@ -6,7 +6,6 @@ import Dashboard from "./features/Basic/Dashboard";
 import "./styles/main.css"
 import RequireAuth from "./axios/RequireAuth";
 import ErrorPage from "./features/Basic/ErrorPage";
-import CV from "./features/CV/CV";
 import ProfileOverview from "./features/Employee/ProfileOverview";
 import ProjectOverview from "./features/Project/ProjectOverview";
 import EmployeeOverview from "./features/Employee/EmployeeOverview";
@@ -31,7 +30,6 @@ const queryClient = new QueryClient();
             <Route path="/profile" index element={<ProfileOverview />} />
             <Route path="/projects" index element={<ProjectOverview />} />
             <Route path="/employees" index element={<EmployeeOverview />} />
-            <Route path="/cv/:id" index element={<CV />} />
             <Route path="/project/:id" index element={<SingleProjectView />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
           </Route>

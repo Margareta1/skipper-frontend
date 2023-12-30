@@ -79,12 +79,9 @@ const ProfileOverview: React.FC = () => {
 
   const generatePDF = () => {
     const report = new jsPDF('portrait', 'pt', 'a4');
-  
-    // Replace 'yourContent' with the actual content you want to export
-    const content = document.getElementById('report'); // or any other way to get your content
+    const content = document.getElementById('report'); 
   
     if (content) {
-      // Use the html method directly with the content
       report.html(content, {
         callback: () => {
           report.save('report.pdf');
