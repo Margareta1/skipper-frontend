@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select, Skeleton } from "antd";
+import { Button, Form, Select, Skeleton } from "antd";
 import { useAddEmployeeLanguage } from "../../hooks/useAddEmployeeLanguage";
 import { useAddEmployeePositionLevel } from "../../hooks/useAddEmployeePositionLevel";
 import { useAddEmployeeSkill } from "../../hooks/useAddEmployeeSkill";

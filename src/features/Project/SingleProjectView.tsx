@@ -5,7 +5,6 @@ import {
   Modal,
   Select,
   Skeleton,
-  Tooltip,
 } from "antd";
 import { useParams } from "react-router";
 import { useGetProject } from "../../hooks/useGetProject";
@@ -40,7 +39,6 @@ const SingleProjectView: React.FC = () => {
     useGetHiringPosts(id);
   const { data: allEmpoyees, isLoading: isLoadingAllEmployees } =
     useGetAllEmployees();
-
   const addComment = useAddProjectComment();
   const applyToHiringPost = useApplyToHiringPost();
   const addEmployeeToProject = useAddEmployeeToProject();
@@ -96,13 +94,13 @@ const SingleProjectView: React.FC = () => {
   };
 
   const generatePDF = () => {
-    const report = new jsPDF('landscape', 'pt', 'a4', true);
-    const content = document.getElementById('report'); 
-  
+    const report = new jsPDF("landscape", "pt", "a4", true);
+    const content = document.getElementById("report");
+
     if (content) {
       report.html(content, {
         callback: () => {
-          report.save('project-report.pdf');
+          report.save("project-report.pdf");
         },
       });
     }
@@ -307,10 +305,10 @@ const SingleProjectView: React.FC = () => {
           );
         })}
       </div>
+
       <div className="administration-inner-div">
         <h3 style={{ textAlign: "center" }}>REPORTING</h3>
         <Button onClick={generatePDF}>Export PDF</Button>
-
       </div>
     </div>
   );

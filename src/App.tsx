@@ -12,6 +12,7 @@ import EmployeeOverview from "./features/Employee/EmployeeOverview";
 import SingleProjectView from "./features/Project/SingleProjectView";
 import LineOverview from "./features/LineManagement/LineOverview";
 import Administration from "./features/Administration/Administration";
+import SolveSurvey from "./features/Feedback/SolveSurvey";
 
 function App() {
 
@@ -31,6 +32,7 @@ const queryClient = new QueryClient();
             <Route path="/projects" index element={<ProjectOverview />} />
             <Route path="/employees" index element={<EmployeeOverview />} />
             <Route path="/project/:id" index element={<SingleProjectView />} />
+            <Route path="/solvesurvey/:id" index element={<SolveSurvey />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
           </Route>
         <Route element={<RequireAuth allowedRoles={["Admin"]} />}>

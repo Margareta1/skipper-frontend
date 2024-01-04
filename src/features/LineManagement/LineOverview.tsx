@@ -5,17 +5,12 @@ import jsPDF from "jspdf";
 import { FaEdit } from "react-icons/fa";
 import { useState } from "react";
 import EditEmployee from "./EditEmployee";
-import { useNavigate } from "react-router";
-
 
 const LineOverview: React.FC = () => {
   const { data: allLines, isLoading: isLoadingAllLines } = useGetAllLines();
   const { data: personalInfo, isLoading: isLoadingPersonalInfo } =
     useGetPersonalInfo();
-    const navigate = useNavigate();
-  if (allLines && personalInfo) {
-    console.log(allLines, personalInfo);
-  }
+
 
   const generatePDF = () => {
     const report = new jsPDF('portrait', 'pt', 'a4');

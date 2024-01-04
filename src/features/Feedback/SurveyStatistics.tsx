@@ -1,10 +1,10 @@
 interface SurveyStatisticsProps {
-
+    Id: string;
 }
 
-const SurveyStatistics: React.FC<SurveyStatisticsProps> =() =>{
+const SurveyStatistics: React.FC<SurveyStatisticsProps> =(props) =>{
 
-    return  <></>;
+    return  <>Survey statistics component {props.Id}</>;
 }
 
 export default SurveyStatistics;

@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Select, Skeleton } from "antd";
+import { Button, Form, Input, Modal, Popover, Select, Skeleton, Tooltip } from "antd";
 import { useState } from "react";
 import AddProjectForm from "./AddProjectForm";
 import AddSkillForm from "./AddSkillForm";
@@ -12,6 +12,11 @@ import { CiCirclePlus } from "react-icons/ci";
 import { useGetAllEmployees } from "../../hooks/useGetAllEmployees";
 import { useAddEmployeeToLine } from "../../hooks/useAddEmployeeToLine";
 import { AddEmployeeToLineType } from "../../types/AddEmployeeToLineType";
+import { CreateSurveyType } from "../../types/CreateSurveyType";
+import { useAddSurvey } from "../../hooks/useAddSurvey";
+import { useGetAllSurveys } from "../../hooks/useGetAllSurveys";
+import { useGetPersonalInfo } from "../../hooks/useGetPersonalInfo";
+import SurveyStatistics from "../Feedback/SurveyStatistics";
 
 const Administration: React.FC = () => {
   const [seeAddProject, setSeeAddProject] = useState(false);
@@ -24,9 +29,29 @@ const Administration: React.FC = () => {
   const { data: appPref, isLoading: isLoadingAppPref } = useGetAppPreferences();
   const { data: employees, isLoading: isLoadingEmployees } =
     useGetAllEmployees();
-
+  const { data: allEmpoyees, isLoading: isLoadingAllEmployees } =
+    useGetAllEmployees();
+  const { data: allSurveys, isLoading: isLoadingAllSurveys } =
+    useGetAllSurveys();
+  const [form] = Form.useForm<CreateSurveyType>();
+  const addSurvey = useAddSurvey();
+  const [isSurveyModalOpen, setIsSurveyModalOpen] = useState(false);
+  const { data: personal, isLoading: isLoadingPersonal } = useGetPersonalInfo();
   const updateAppPreferences = useUpdateAppPreferences();
   const addEmployeeToLine = useAddEmployeeToLine();
+
+
+  const getFormatedDate = (input: string) => {
+    const dateObject = new Date(input);
+    const formattedDateString = dateObject.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+
+    return formattedDateString;
+  };
+
   const showAddProject = () => {
     setSeeAddProject(true);
   };
@@ -108,7 +133,32 @@ const Administration: React.FC = () => {
     addEmployeeToLine.mutate(newValue);
   };
 
-  return isLoading || isLoadingAppPref || isLoadingEmployees ? (
+  const showSurveyModal = () => {
+    setIsSurveyModalOpen(true);
+  };
+
+  const handleSurveyOk = () => {
+    setIsSurveyModalOpen(false);
+  };
+
+  const handleSurveyCancel = () => {
+    setIsSurveyModalOpen(false);
+  };
+
+  const handleCreateSurvey = (values: CreateSurveyType) => {
+    addSurvey.mutate(values, {
+      onSuccess: () => {
+        form.resetFields();
+      },
+    });
+  };
+
+  return isLoading ||
+    isLoadingAppPref ||
+    isLoadingEmployees ||
+    isLoadingAllEmployees ||
+    isLoadingAllSurveys || 
+    isLoadingPersonal ? (
     <Skeleton />
   ) : (
     <div className="dashboard-main-div">
@@ -245,7 +295,7 @@ const Administration: React.FC = () => {
         <div className="admin-app-pref">
           <h4 style={{ textAlign: "center" }}>APP PREFERENCES</h4>
           <p className="admin-app-pref-p">
-          <span className="font-weight-900">Company name:</span>
+            <span className="font-weight-900">Company name:</span>
             <Input
               defaultValue={appPref.companyName}
               onChange={(val: any) => {
@@ -254,10 +304,186 @@ const Administration: React.FC = () => {
             />
           </p>
           <p className="admin-app-pref-p">
-          <span className="font-weight-900">RGB:</span> <Input defaultValue={appPref.rgb} />
+            <span className="font-weight-900">RGB:</span>{" "}
+            <Input defaultValue={appPref.rgb} />
           </p>
         </div>
       </div>
+
+      <div className="administration-inner-div">
+        <h3 style={{ textAlign: "center" }}>FEEDBACK</h3>
+        <Button
+          type="primary"
+          style={{ width: "150px", marginLeft: "2rem" }}
+          onClick={showSurveyModal}
+        >
+          Create survey
+        </Button>
+        <Modal
+          title="Create survey"
+          open={isSurveyModalOpen}
+          onOk={handleSurveyOk}
+          onCancel={handleSurveyCancel}
+          style={{ width: "70%" }}
+          footer={[<Button onClick={handleSurveyCancel}>Cancel</Button>]}
+        >
+          <Form onFinish={handleCreateSurvey} form={form}>
+            <Form.Item
+              label="Start Date"
+              name="StartDate"
+              rules={[{ required: true, message: "Please select start date!" }]}
+            >
+              <Input type="date" />
+            </Form.Item>
+
+            <Form.Item
+              label="End Date"
+              name="EndDate"
+              rules={[{ required: true, message: "Please select end date!" }]}
+            >
+              <Input type="date" />
+            </Form.Item>
+
+            <Form.Item
+              label="Questions"
+              name="Questions"
+              rules={[
+                {
+                  required: true,
+                  message: "Please add at least one question!",
+                },
+              ]}
+            >
+              <Form.List name="Questions">
+                {(fields, { add, remove }) => (
+                  <>
+                    {fields.map(({ key, name, ...restField }) => (
+                      <div key={key}>
+                        <Form.Item
+                          {...restField}
+                          label="Question Label"
+                          name={[name, "Label"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please enter question label!",
+                            },
+                          ]}
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          label="Order Key"
+                          name={[name, "OrderKey"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please enter order key!",
+                            },
+                          ]}
+                        >
+                          <Input type="number" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          label="Placeholder"
+                          name={[name, "Placeholder"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please enter placeholder!",
+                            },
+                          ]}
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Button type="default" onClick={() => remove(name)}>
+                          Remove Question
+                        </Button>
+                      </div>
+                    ))}
+                    <Form.Item>
+                      <Button
+                        type="dashed"
+                        onClick={() => add()}
+                        style={{ width: "100%" }}
+                      >
+                        Add Question
+                      </Button>
+                    </Form.Item>
+                  </>
+                )}
+              </Form.List>
+            </Form.Item>
+
+            <Form.Item
+              label="Assignees Usernames"
+              name="AssigneesUsernames"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter at least one assignee username!",
+                },
+              ]}
+            >
+              <Select
+                mode="tags"
+                style={{ width: "100%" }}
+                placeholder="Enter assignee usernames"
+              >
+                {allEmpoyees.map((data: any) => (
+                  <Select.Option
+                    key={data.user.userName}
+                    value={data.user.userName}
+                  >
+                    {data.user.userName}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "self-end",
+              }}
+            >
+              <Form.Item
+                wrapperCol={{ span: 24 }}
+                style={{ textAlignLast: "end" }}
+              >
+                <Button
+                  style={{ alignSelf: "center" }}
+                  htmlType="submit"
+                  type="primary"
+                >
+                  Create
+                </Button>
+              </Form.Item>
+            </div>
+          </Form>
+        </Modal>
+
+        {allSurveys.surveysWithAssignees.map((x:any)=>{
+          if(x.survey.creatorId==personal.id){
+            return <div className="line-container">
+              <span className="font-weight-900">{}</span>: {getFormatedDate(x.survey.startDate)} - {getFormatedDate(x.survey.endDate)}  
+              <Popover content={<SurveyStatistics Id={x.survey.id} />} title="Survey statistics">
+    <Button style={{margin:"10px"}} type="primary">Show statistics</Button>
+  </Popover>
+            </div>
+          }
+          else{
+            return;
+          }
+
+        })}
+      </div>
+
+
     </div>
   );
 };

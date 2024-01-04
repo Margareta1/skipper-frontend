@@ -12,7 +12,9 @@ import { useGetCV } from "../../hooks/useGetCVs";
 import { AddCVItemType, DeleteCVItemType } from "../../types/CVType";
 import { useAddCVItem } from "../../hooks/useAddCVItem";
 import { useDeleteCVItem } from "../../hooks/useDeleteCVItem";
-import JsPDF, { jsPDF } from "jspdf";
+import { jsPDF } from "jspdf";
+import { useGetAllAssignedSurveys } from "../../hooks/useGetAllAssignedSurveys";
+import { useNavigate } from "react-router";
 
 const EECoptions = [
   { value: "Education", label: "Education" },
@@ -30,6 +32,9 @@ const ProfileOverview: React.FC = () => {
   const { data: employeeData } = useGetEmployeeOverview();
   const { data: goals } = useGetGoals();
   const { data: cv } = useGetCV();
+  const { data: assignedSurveys, isLoading: isLoadingAssignedSurveys } =
+  useGetAllAssignedSurveys();
+  const navigate = useNavigate();
   const deleteGoal = useDeleteGoal();
   const addGoal = useAddGoal();
 
@@ -56,9 +61,11 @@ const ProfileOverview: React.FC = () => {
   };
 
   const handleAddCVItem = (input: AddCVItemType) => {
-    input.CVId = cv.Id;
+    input.CVId = cv.$values[0].CV.Id;
     console.log(input);
-    addCVItem.mutate(input);
+    addCVItem.mutate(input, {onSuccess:()=>{
+      console.log("success")
+    }});
     form.resetFields();
   };
 
@@ -89,13 +96,24 @@ const ProfileOverview: React.FC = () => {
       });
     }
   };
+
+  const isValid = (startDate:string, endDate:string) =>{
+    const today = new Date();
+    const parsedStartDate = new Date(startDate);
+    const parsedEndDate = new Date(endDate);
+    return today >= parsedStartDate && today <= parsedEndDate;
+  }
+
+  const navigateToSolver = (id:string)=>{
+    navigate(`/solvesurvey/${id}`);
+  }
   
 
   return (
     cv &&
     goals &&
     personalInfo &&
-    employeeData && (
+    employeeData && assignedSurveys && (
       <div className="dashboard-main-div">
         <h2 style={{ fontWeight: "900" }}>MY PROFILE</h2>
         <div
@@ -185,7 +203,7 @@ const ProfileOverview: React.FC = () => {
         <div className="administration-inner-div" id="report">
           <h4 style={{ textAlign: "center" }}>CV</h4>
           <h5>Education</h5>
-          {cv.CVItems.$values.map((item: any) => {
+          {cv.$values[0].CV.CVItems.$values.map((item: any) => {
             {
               if (item.EducationExperienceOrCert == "Education") {
                 return (
@@ -213,7 +231,7 @@ const ProfileOverview: React.FC = () => {
           })}
           <h5>Experience</h5>
 
-          {cv.CVItems.$values.map((item: any) => {
+          {cv.$values[0].CV.CVItems.$values.map((item: any) => {
             {
               if (item.EducationExperienceOrCert == "Experience") {
                 return (
@@ -242,7 +260,7 @@ const ProfileOverview: React.FC = () => {
 
           <h5>Certification</h5>
 
-          {cv.CVItems.$values.map((item: any) => {
+          {cv.$values[0].CV.CVItems.$values.map((item: any) => {
             {
               if (item.EducationExperienceOrCert == "Certification") {
                 return (
@@ -351,6 +369,13 @@ const ProfileOverview: React.FC = () => {
         </div>
         <div className="administration-inner-div">
           <h4 style={{ textAlign: "center" }}>SURVEYS</h4>
+          {assignedSurveys.surveysWithAssignees.map((x:any)=>{
+            if(isValid(x.survey.startDate, x.survey.endDate)){
+            return <div className="line-container">
+              <span className="font-weight-900">{x.survey.id}</span> <Button ghost onClick={()=>{navigateToSolver(x.survey.id)}}>Solve</Button>  
+            </div>
+            }
+        })}
         </div>
       </div>
     )
