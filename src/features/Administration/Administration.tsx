@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Popover, Select, Skeleton, Tooltip } from "antd";
+import { Button, Form, Input, Modal, Popover, Select, Skeleton } from "antd";
 import { useState } from "react";
 import AddProjectForm from "./AddProjectForm";
 import AddSkillForm from "./AddSkillForm";

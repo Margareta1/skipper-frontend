@@ -15,6 +15,7 @@ import { useDeleteCVItem } from "../../hooks/useDeleteCVItem";
 import { jsPDF } from "jspdf";
 import { useGetAllAssignedSurveys } from "../../hooks/useGetAllAssignedSurveys";
 import { useNavigate } from "react-router";
+import { useGetAssignedSkillsMatrixes } from "../../hooks/useGetAssignedSkillsMatrixes";
 
 const EECoptions = [
   { value: "Education", label: "Education" },
@@ -34,6 +35,7 @@ const ProfileOverview: React.FC = () => {
   const { data: cv } = useGetCV();
   const { data: assignedSurveys, isLoading: isLoadingAssignedSurveys } =
   useGetAllAssignedSurveys();
+  const {data:assignedSkillsMatrixes, isLoading: isLoadingAssignedSkillsMatrixes} = useGetAssignedSkillsMatrixes();
   const navigate = useNavigate();
   const deleteGoal = useDeleteGoal();
   const addGoal = useAddGoal();
@@ -113,7 +115,8 @@ const ProfileOverview: React.FC = () => {
     goals &&
     personalInfo &&
     employeeData && 
-    assignedSurveys && (
+    assignedSurveys &&
+    assignedSkillsMatrixes &&(
       <div className="dashboard-main-div">
         <h2 style={{ fontWeight: "900" }}>MY PROFILE</h2>
         <div
