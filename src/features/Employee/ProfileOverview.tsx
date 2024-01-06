@@ -37,7 +37,6 @@ const ProfileOverview: React.FC = () => {
   const navigate = useNavigate();
   const deleteGoal = useDeleteGoal();
   const addGoal = useAddGoal();
-
   const showModal = () => {
     setIsOpenCVItem(true);
   };
@@ -113,7 +112,8 @@ const ProfileOverview: React.FC = () => {
     cv &&
     goals &&
     personalInfo &&
-    employeeData && assignedSurveys && (
+    employeeData && 
+    assignedSurveys && (
       <div className="dashboard-main-div">
         <h2 style={{ fontWeight: "900" }}>MY PROFILE</h2>
         <div
@@ -203,7 +203,7 @@ const ProfileOverview: React.FC = () => {
         <div className="administration-inner-div" id="report">
           <h4 style={{ textAlign: "center" }}>CV</h4>
           <h5>Education</h5>
-          {cv.$values[0].CV.CVItems.$values.map((item: any) => {
+          {cv?.$values[0]?.CV?.CVItems?.$values?.map((item: any) => {
             {
               if (item.EducationExperienceOrCert == "Education") {
                 return (
@@ -231,7 +231,7 @@ const ProfileOverview: React.FC = () => {
           })}
           <h5>Experience</h5>
 
-          {cv.$values[0].CV.CVItems.$values.map((item: any) => {
+          {cv?.$values[0]?.CV?.CVItems?.$values?.map((item: any) => {
             {
               if (item.EducationExperienceOrCert == "Experience") {
                 return (
@@ -260,7 +260,7 @@ const ProfileOverview: React.FC = () => {
 
           <h5>Certification</h5>
 
-          {cv.$values[0].CV.CVItems.$values.map((item: any) => {
+          {cv?.$values[0]?.CV?.CVItems?.$values?.map((item: any) => {
             {
               if (item.EducationExperienceOrCert == "Certification") {
                 return (
@@ -367,12 +367,13 @@ const ProfileOverview: React.FC = () => {
         <div className="administration-inner-div">
           <h4 style={{ textAlign: "center" }}>SKILLS MATRIX</h4>
         </div>
+
         <div className="administration-inner-div">
           <h4 style={{ textAlign: "center" }}>SURVEYS</h4>
-          {assignedSurveys.surveysWithAssignees.map((x:any)=>{
-            if(isValid(x.survey.startDate, x.survey.endDate)){
+          {assignedSurveys.map((x:any)=>{
+            if(isValid(x.startDate, x.endDate)){
             return <div className="line-container">
-              <span className="font-weight-900">{x.survey.id}</span> <Button ghost onClick={()=>{navigateToSolver(x.survey.id)}}>Solve</Button>  
+              <span className="font-weight-900">{x.id}</span> <Button ghost onClick={()=>{navigateToSolver(x.id)}}>Solve</Button>  
             </div>
             }
         })}
