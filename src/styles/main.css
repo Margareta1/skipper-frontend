@@ -223,3 +223,10 @@ height: auto;
 .margin-right-1rem{
     margin-right: 1rem;
 }
+
+.single-skills-matrix-p{
+    background-color: snow;
+    border-radius: 4px;
+    margin:5px;
+    padding:5px;
+}

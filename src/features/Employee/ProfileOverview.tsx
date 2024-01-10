@@ -33,12 +33,13 @@ const ProfileOverview: React.FC = () => {
   const { data: employeeData } = useGetEmployeeOverview();
   const { data: goals } = useGetGoals();
   const { data: cv } = useGetCV();
-  const { data: assignedSurveys, isLoading: isLoadingAssignedSurveys } =
+  const { data: assignedSurveys } =
   useGetAllAssignedSurveys();
-  const {data:assignedSkillsMatrixes, isLoading: isLoadingAssignedSkillsMatrixes} = useGetAssignedSkillsMatrixes();
+  const {data:assignedSkillsMatrixes } = useGetAssignedSkillsMatrixes();
   const navigate = useNavigate();
   const deleteGoal = useDeleteGoal();
   const addGoal = useAddGoal();
+
   const showModal = () => {
     setIsOpenCVItem(true);
   };
@@ -105,10 +106,15 @@ const ProfileOverview: React.FC = () => {
     return today >= parsedStartDate && today <= parsedEndDate;
   }
 
-  const navigateToSolver = (id:string)=>{
-    navigate(`/solvesurvey/${id}`);
+  const navigateToSolver = (id:string, type:string)=>{
+    if(type==='survey'){
+      navigate(`/solvesurvey/${id}`);
+
+    }
+    else if (type==='skillsm'){
+      navigate(`/solveskillsmatrix/${id}`);
+    }
   }
-  
 
   return (
     cv &&
@@ -369,6 +375,11 @@ const ProfileOverview: React.FC = () => {
 
         <div className="administration-inner-div">
           <h4 style={{ textAlign: "center" }}>SKILLS MATRIX</h4>
+          {assignedSkillsMatrixes.map((x:any)=>{
+            return <div className="line-container">
+            {x.id}  <Button ghost onClick={()=>{navigateToSolver(x.id, 'skillsm')}}>Solve</Button>
+          </div>
+          })}
         </div>
 
         <div className="administration-inner-div">
@@ -376,7 +387,7 @@ const ProfileOverview: React.FC = () => {
           {assignedSurveys.map((x:any)=>{
             if(isValid(x.startDate, x.endDate)){
             return <div className="line-container">
-              <span className="font-weight-900">{x.id}</span> <Button ghost onClick={()=>{navigateToSolver(x.id)}}>Solve</Button>  
+              <span className="font-weight-900">{x.id}</span> <Button ghost onClick={()=>{navigateToSolver(x.id, 'survey')}}>Solve</Button>  
             </div>
             }
         })}

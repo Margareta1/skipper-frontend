@@ -9,6 +9,7 @@ import { useGetSkillsMatrixes } from "../../hooks/useGetSkillMatrixes";
 import { useAddSkillsMatrix } from "../../hooks/useAddSkillsMatrix";
 import { AddSkillsMatrixType } from "../../types/AddSkillsMatrixType";
 import { useGetAllEmployees } from "../../hooks/useGetAllEmployees";
+import { useNavigate } from "react-router";
 
 const LineOverview: React.FC = () => {
   const { data: allLines, isLoading: isLoadingAllLines } = useGetAllLines();
@@ -19,6 +20,7 @@ const LineOverview: React.FC = () => {
   const { data:allEmployees, isLoading:isLoadingAllEmployees } = useGetAllEmployees();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -68,6 +70,10 @@ const LineOverview: React.FC = () => {
       [employeeEmail]: false,
     }));
   };
+
+  const handleSeeSkillsMatrix = (id:string) =>{
+    navigate(`/skillsmatrix/${id}`)
+  }
 
   return isLoadingAllLines || isLoadingPersonalInfo || isLoadingAllEmployees || isLoadingSkillsM ? (
     <Skeleton />
@@ -254,7 +260,14 @@ const LineOverview: React.FC = () => {
             </Form.Item>
           </Form>
         </Modal>
-        <div className="line-container">All skills matrixes //TODO</div>
+        <div className="line-container">
+        {skillsM.map((x:any)=>{
+          return <div className="single-skills-matrix-p">
+            {x.id} - <Button onClick={()=>{handleSeeSkillsMatrix(x.id)}}>See inputs</Button>
+          </div>
+        })}
+          
+        </div>
       </div>
     </div>
   );

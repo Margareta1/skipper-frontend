@@ -13,6 +13,8 @@ import SingleProjectView from "./features/Project/SingleProjectView";
 import LineOverview from "./features/LineManagement/LineOverview";
 import Administration from "./features/Administration/Administration";
 import SolveSurvey from "./features/Feedback/SolveSurvey";
+import SolveSkillsMatrix from "./features/SkillsMatrix/SolveSkillsMatrix";
+import SkillsMatrix from "./features/SkillsMatrix/SkillsMatrix";
 
 function App() {
 
@@ -33,6 +35,8 @@ const queryClient = new QueryClient();
             <Route path="/employees" index element={<EmployeeOverview />} />
             <Route path="/project/:id" index element={<SingleProjectView />} />
             <Route path="/solvesurvey/:id" index element={<SolveSurvey />} />
+            <Route path="/solveskillsmatrix/:id" index element={<SolveSkillsMatrix />} />
+            <Route path="/skillsmatrix/:id" index element={<SkillsMatrix />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
           </Route>
         <Route element={<RequireAuth allowedRoles={["Admin"]} />}>
