@@ -210,13 +210,13 @@ const ProfileOverview: React.FC = () => {
         </div>
 
         <div className="administration-inner-div" id="report">
-          <h4 style={{ textAlign: "center" }}>CV</h4>
-          <h5>Education</h5>
+          <h3 style={{ textAlign: "center" }}>CV</h3>
+          <h4>Education</h4>
           {cv?.$values[0]?.CV?.CVItems?.$values?.map((item: any) => {
             {
               if (item.EducationExperienceOrCert == "Education") {
                 return (
-                  <>
+                  <div className="cv-container">
                     <p>{item.Title}</p>
                     <p>
                       {getFormatedDate(item.From)} - {getFormatedDate(item.To)}{" "}
@@ -231,20 +231,20 @@ const ProfileOverview: React.FC = () => {
                         </Button>
                       </span>
                     </p>
-                  </>
+                  </div>
                 );
               } else {
                 return <></>;
               }
             }
           })}
-          <h5>Experience</h5>
+          <h4>Experience</h4>
 
           {cv?.$values[0]?.CV?.CVItems?.$values?.map((item: any) => {
             {
               if (item.EducationExperienceOrCert == "Experience") {
                 return (
-                  <>
+                  <div className="cv-container">
                     <p>{item.Title}</p>
                     <p>
                       {getFormatedDate(item.From)} - {getFormatedDate(item.To)}{" "}
@@ -259,7 +259,7 @@ const ProfileOverview: React.FC = () => {
                         </Button>
                       </span>
                     </p>
-                  </>
+                  </div>
                 );
               } else {
                 return <></>;
@@ -267,13 +267,13 @@ const ProfileOverview: React.FC = () => {
             }
           })}
 
-          <h5>Certification</h5>
+          <h4>Certification</h4>
 
           {cv?.$values[0]?.CV?.CVItems?.$values?.map((item: any) => {
             {
               if (item.EducationExperienceOrCert == "Certification") {
                 return (
-                  <>
+                  <div className="cv-container">
                     <p>{item.Title}</p>
                     <p>
                       {getFormatedDate(item.From)} - {getFormatedDate(item.To)}{" "}
@@ -288,7 +288,7 @@ const ProfileOverview: React.FC = () => {
                         </Button>
                       </span>
                     </p>
-                  </>
+                  </div>
                 );
               } else {
                 return <></>;

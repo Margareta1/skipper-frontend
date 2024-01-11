@@ -215,7 +215,7 @@ height: auto;
 }
 
 .employee-email-display{
-    background-color: white;
+    background-color: rgb(226, 107, 107);
     border-radius: 4px;
     padding: 5px;
 }
@@ -229,4 +229,10 @@ height: auto;
     border-radius: 4px;
     margin:5px;
     padding:5px;
+}
+
+.cv-container{
+    background-color: white;
+    margin: 20px;
+    padding: 5px;
 }

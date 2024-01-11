@@ -6,10 +6,12 @@ import SkillsMatrixInput from "./SkillsMatrixInput";
 const SkillsMatrix: React.FC = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetSkillsMatrix(id);
+
   return isLoading ? (
     <Skeleton />
   ) : (
     <div className="dashboard-main-div">
+      {data?.inputs.length == 0 &&<div className="administration-inner-div">No inputs.</div>}
   {data?.inputs?.map((input: any) => {
     return (
       <div key={input?.id} className="administration-inner-div">

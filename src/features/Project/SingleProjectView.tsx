@@ -105,6 +105,11 @@ const SingleProjectView: React.FC = () => {
       });
     }
   };
+
+  if(lead && personal){
+    console.log(lead, personal)
+    console.log(lead.lead.id == personal.id);
+  }
   return isLoadingProject ||
     isLoadingEmployees ||
     isLoadingComments ||
@@ -190,6 +195,7 @@ const SingleProjectView: React.FC = () => {
       <div className="administration-inner-div">
         <h3 style={{ textAlign: "center" }}>EMPLOYEES</h3>
         <div className="employees-list">
+          
           {employees.map((em: any) => {
             return (
               <span className="employee-email-display">{em.user?.email}</span>
@@ -305,11 +311,11 @@ const SingleProjectView: React.FC = () => {
           );
         })}
       </div>
-
+      {lead.lead.id == personal.id && (
       <div className="administration-inner-div">
         <h3 style={{ textAlign: "center" }}>REPORTING</h3>
         <Button onClick={generatePDF}>Export PDF</Button>
-      </div>
+      </div>)}
     </div>
   );
 };
