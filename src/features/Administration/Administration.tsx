@@ -1,5 +1,5 @@
 import { Button, Form, Input, Modal, Popover, Select, Skeleton } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddProjectForm from "./AddProjectForm";
 import AddSkillForm from "./AddSkillForm";
 import AddUserForm from "./AddUserForm";
@@ -25,21 +25,50 @@ const Administration: React.FC = () => {
   const [seeAddLanguage, setSeeAddLanguage] = useState(false);
   const [seeAddLine, setSeeAddLine] = useState(false);
   const [seeAddEmployeeToLine, setSeeAddEmployeeToLine] = useState(false);
-  const { data, isLoading } = useGetAllLines();
-  const { data: appPref, isLoading: isLoadingAppPref } = useGetAppPreferences();
-  const { data: employees, isLoading: isLoadingEmployees } =
-    useGetAllEmployees();
-  const { data: allEmpoyees, isLoading: isLoadingAllEmployees } =
-    useGetAllEmployees();
-  const { data: allSurveys, isLoading: isLoadingAllSurveys } =
-    useGetAllSurveys();
-  const [form] = Form.useForm<CreateSurveyType>();
-  const addSurvey = useAddSurvey();
   const [isSurveyModalOpen, setIsSurveyModalOpen] = useState(false);
-  const { data: personal, isLoading: isLoadingPersonal } = useGetPersonalInfo();
+  const [form] = Form.useForm<CreateSurveyType>();
+
+  const addSurvey = useAddSurvey();
   const updateAppPreferences = useUpdateAppPreferences();
   const addEmployeeToLine = useAddEmployeeToLine();
+  const { data: appPref, isLoading: isLoadingAppPref } = useGetAppPreferences();
+  const { data: employees, isLoading: isLoadingEmployees } =
+  useGetAllEmployees();
+  const { data: allEmpoyees, isLoading: isLoadingAllEmployees } =
+  useGetAllEmployees();
+  const { data: allSurveys, isLoading: isLoadingAllSurveys } =
+  useGetAllSurveys();
+  const { data, isLoading } = useGetAllLines();
+  const { data: personal, isLoading: isLoadingPersonal } = useGetPersonalInfo();
+  const [appPreferences, setAppPreferences] = useState<any>();
+  const [empl, setEmpl] = useState<any>();
+  const [allEmpl, setAllEmpl] = useState<any>();
+  const [allSur, setAllSur] = useState<any>();
+  const [allLines, setAllLines] = useState<any>();
+  const [pers, setPers] = useState<any>();
 
+  useEffect(()=>{
+    if(appPref){
+      setAppPreferences(appPref);
+    }
+    if(employees){
+      setEmpl(employees);
+    }
+    if(allEmpoyees){
+      setAllEmpl(allEmpoyees);
+    }
+    if(allSurveys){
+      setAllSur(allSurveys)
+    }
+    if(data){
+      setAllLines(data);
+    }
+    if(personal){
+      setPers(personal)
+    }
+
+  }, [appPref, employees, allEmpoyees, allSurveys, data, personal])
+  
 
   const getFormatedDate = (input: string) => {
     const dateObject = new Date(input);
@@ -122,7 +151,7 @@ const Administration: React.FC = () => {
   };
 
   const handleUpdate = (value: string, prop: string) => {
-    updateAppPreferences.mutate({ ...appPref, [prop]: value });
+    updateAppPreferences.mutate({ ...appPreferences, [prop]: value });
   };
 
   const handleAddEmployee = (value: any, lineManager: string) => {
@@ -130,7 +159,9 @@ const Administration: React.FC = () => {
       EmployeeUsername: value,
       ManagerUsername: lineManager,
     };
-    addEmployeeToLine.mutate(newValue);
+    addEmployeeToLine.mutate(newValue, {onSuccess:()=>{
+      setSeeAddEmployeeToLine(false);
+    }});
   };
 
   const showSurveyModal = () => {
@@ -149,6 +180,7 @@ const Administration: React.FC = () => {
     addSurvey.mutate(values, {
       onSuccess: () => {
         form.resetFields();
+        setSeeAddProject(false);
       },
     });
   };
@@ -189,7 +221,7 @@ const Administration: React.FC = () => {
             width={"80%"}
             footer={[<Button onClick={handleCancelAddProject}>Cancel</Button>]}
           >
-            <AddProjectForm />
+            <AddProjectForm onSuccess={handleOkAddProject} />
           </Modal>
           <Modal
             title="Add skill"
@@ -199,7 +231,7 @@ const Administration: React.FC = () => {
             width={"80%"}
             footer={[<Button onClick={handleCancelAddSkill}>Cancel</Button>]}
           >
-            <AddSkillForm />
+            <AddSkillForm onSuccess={handleOkAddSkill} />
           </Modal>
           <Modal
             title="Add user"
@@ -209,7 +241,7 @@ const Administration: React.FC = () => {
             width={"80%"}
             footer={[<Button onClick={handleCancelAddUser}>Cancel</Button>]}
           >
-            <AddUserForm />
+            <AddUserForm onSuccess={handleOkAddUser} />
           </Modal>
           <Modal
             title="Add language"
@@ -219,7 +251,7 @@ const Administration: React.FC = () => {
             width={"80%"}
             footer={[<Button onClick={handleCancelAddLanguage}>Cancel</Button>]}
           >
-            <AddLanguageForm />
+            <AddLanguageForm onSuccess={handleOkAddLanguage} />
           </Modal>
           <Modal
             title="Add line"
@@ -229,7 +261,7 @@ const Administration: React.FC = () => {
             width={"80%"}
             footer={[<Button onClick={handleCancelAddLine}>Cancel</Button>]}
           >
-            <AddLineForm />
+            <AddLineForm onSuccess={handleOkAddLine} />
           </Modal>
         </div>
       </div>
@@ -237,7 +269,7 @@ const Administration: React.FC = () => {
       <div className="administration-inner-div">
         <div className="admin-line">
           <h4 style={{ textAlign: "center" }}>LINES</h4>
-          {data.map((x: any) => {
+          {allLines.map((x: any) => {
             return (
               <div className="line-container">
                 <p>
@@ -275,7 +307,7 @@ const Administration: React.FC = () => {
                       handleAddEmployee(e, x.lineManager.email);
                     }}
                   >
-                    {employees.map((data: any) => (
+                    {empl?.map((data: any) => (
                       <Select.Option
                         key={data.user.email}
                         value={data.user.email}
@@ -297,7 +329,7 @@ const Administration: React.FC = () => {
           <p className="admin-app-pref-p">
             <span className="font-weight-900">Company name:</span>
             <Input
-              defaultValue={appPref.companyName}
+              defaultValue={appPreferences?.companyName}
               onChange={(val: any) => {
                 handleUpdate(val.target.value, "companyName");
               }}
@@ -305,7 +337,7 @@ const Administration: React.FC = () => {
           </p>
           <p className="admin-app-pref-p">
             <span className="font-weight-900">RGB:</span>{" "}
-            <Input defaultValue={appPref.rgb} />
+            <Input defaultValue={appPreferences.rgb} />
           </p>
         </div>
       </div>
@@ -432,7 +464,7 @@ const Administration: React.FC = () => {
                 style={{ width: "100%" }}
                 placeholder="Enter assignee usernames"
               >
-                {allEmpoyees.map((data: any) => (
+                {allEmpl?.map((data: any) => (
                   <Select.Option
                     key={data.user.userName}
                     value={data.user.userName}
@@ -467,8 +499,8 @@ const Administration: React.FC = () => {
           </Form>
         </Modal>
 
-        {allSurveys.surveysWithAssignees.map((x:any)=>{
-          if(x.survey.creatorId==personal.id){
+        {allSur?.surveysWithAssignees?.map((x:any)=>{
+          if(x.survey.creatorId==pers?.id){
             return <div className="line-container">
               <span className="font-weight-900">{}</span>: {getFormatedDate(x.survey.startDate)} - {getFormatedDate(x.survey.endDate)}  
               <Popover content={<SurveyStatistics Id={x.survey.id} />} title="Survey statistics">

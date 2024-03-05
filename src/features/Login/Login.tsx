@@ -4,7 +4,7 @@ import { loginInput, useLogin } from "../../hooks/useLogin";
 import { useCookies } from "react-cookie";
 import { Navigate, useNavigate } from "react-router";
 import { decodeToken } from "../../util/decode-token";
-import ManagerIcon from "../../components/ManagerIcon";
+import ManagerIcon from "../../assets/ManagerIcon";
 
 interface LoginProps {}
 

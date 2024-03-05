@@ -2,11 +2,15 @@ import { Button, Form, Input } from "antd"
 import { AddUserType } from "../../types/AddUserType";
 import { useAddUser } from "../../hooks/useAddUser";
 
-const AddUserForm = () =>{
+interface AddUserFormProps {
+    onSuccess: ()=>void,
+}
+
+const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) =>{
     const [form]=Form.useForm<AddUserType>();
     const addUser = useAddUser();
     const onFinish = (values: AddUserType) =>{
-        addUser.mutate(values, {onSuccess:()=>{console.log("success")}});
+        addUser.mutate(values, {onSuccess:()=>{onSuccess()}});
     }
     return (<Form labelCol={{span:6}} wrapperCol={{span:18}} onFinish={onFinish} form={form}>
         <Form.Item label="Email" name="email" rules={[{required:true, message:"Please enter the email"}]}>

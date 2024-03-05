@@ -4,7 +4,11 @@ import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { useGetAllEmployees } from "../../hooks/useGetAllEmployees";
 import { useAddProject } from "../../hooks/useAddProject";
 
-const AddProjectForm = () => {
+interface AddProjectFormProps {
+  onSuccess: ()=>void,
+}
+
+const AddProjectForm: React.FC<AddProjectFormProps> = ({onSuccess}) => {
   const [form] = Form.useForm<AddProjectType>();
   const { data, isLoading } = useGetAllEmployees();
   const addProject = useAddProject();
@@ -12,7 +16,7 @@ const AddProjectForm = () => {
     console.log(values);
     addProject.mutate(values, {
       onSuccess: () => {
-        console.log("success");
+        onSuccess();
       },
     });
   };

@@ -10,6 +10,7 @@ import { useGetAllGeneralSkills } from "../../hooks/useGetAllGeneralSkills";
 import { AddEmployeePositionLevelType } from "../../types/AddEmployeePositionLevelType";
 import { useGetAllPositions } from "../../hooks/useGetAllPositions";
 import { useGetAllLevelsOfExperience } from "../../hooks/useGetAllLevelfOsExperience";
+import { useEffect, useState } from "react";
 
 interface EditEmployeeProps {
   id: string;
@@ -33,6 +34,29 @@ const EditEmployee: React.FC<EditEmployeeProps> = (props) => {
   const [languageForm] = Form.useForm<AddEmployeeLanguageType>();
   const [skillForm] = Form.useForm<AddEmployeeSkillType>();
   const [positionLevelForm] = Form.useForm<AddEmployeePositionLevelType>();
+  const [lang, setLang] = useState<any>();
+  const [langLev, setLangLev] = useState<any>();
+  const [skills, setSkills] = useState<any>();
+  const [pos, setPos] = useState<any>();
+  const [ex, setEx] = useState<any>();
+
+  useEffect(()=>{
+    if(languages){
+      setLang(languages)
+    }
+    if(languageLevels){
+      setLangLev(languageLevels);
+    }
+    if(generalSkills){
+      setSkills(generalSkills)
+    }
+    if(allPositions){
+      setPos(allPositions)
+    }
+    if(allLevelsOfEx){
+      setEx(allLevelsOfEx)
+    }
+  }, [languages, languageLevels, generalSkills, allPositions, allLevelsOfEx])
 
   const onFinishLanguage = (values: AddEmployeeLanguageType) => {
     values.EmployeeUsername = props.username;
@@ -63,7 +87,7 @@ const EditEmployee: React.FC<EditEmployeeProps> = (props) => {
           rules={[{ required: true, message: "Please enter the language" }]}
         >
           <Select style={{ width: "200px" }}>
-            {languages.map((data: any) => (
+            {lang?.map((data: any) => (
               <Select.Option key={data.id} value={data.id}>
                 {data.name}
               </Select.Option>
@@ -78,7 +102,7 @@ const EditEmployee: React.FC<EditEmployeeProps> = (props) => {
           ]}
         >
           <Select style={{ width: "200px" }}>
-            {languageLevels.map((data: any) => (
+            {langLev?.map((data: any) => (
               <Select.Option key={data.id} value={data.id}>
                 {data.level}
               </Select.Option>
@@ -103,7 +127,7 @@ const EditEmployee: React.FC<EditEmployeeProps> = (props) => {
           rules={[{ required: true, message: "Please enter the skill" }]}
         >
           <Select style={{ width: "200px" }}>
-            {generalSkills.map((data: any) => (
+            {skills?.map((data: any) => (
               <Select.Option key={data.id} value={data.id}>
                 {data.name}
               </Select.Option>
@@ -129,7 +153,7 @@ const EditEmployee: React.FC<EditEmployeeProps> = (props) => {
           rules={[{ required: true, message: "Please enter the position" }]}
         >
           <Select style={{ width: "200px" }}>
-            {allPositions.map((data: any) => (
+            {pos?.map((data: any) => (
               <Select.Option key={data.id} value={data.id}>
                 {data.name}
               </Select.Option>
@@ -145,7 +169,7 @@ const EditEmployee: React.FC<EditEmployeeProps> = (props) => {
           ]}
         >
           <Select style={{ width: "200px" }}>
-            {allLevelsOfEx.map((data: any) => (
+            {ex?.map((data: any) => (
               <Select.Option key={data.id} value={data.id}>
                 {data.title}
               </Select.Option>

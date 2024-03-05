@@ -1,7 +1,7 @@
 import { Skeleton, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { SearchOutlined } from '@ant-design/icons';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { InputRef } from 'antd';
 import { Button, Input, Space } from 'antd';
 import type { ColumnType } from 'antd/es/table';
@@ -20,6 +20,13 @@ const ProjectOverview: React.FC =() =>{
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
+    const [proj, setProj]=useState<any>();
+
+    useEffect(()=>{
+      if(data){
+        setProj(data);
+      }
+    }, [data])
   
     const handleSearch = (
       selectedKeys: string[],
@@ -162,7 +169,7 @@ const ProjectOverview: React.FC =() =>{
     ];
 
     return   (isLoading ? <Skeleton /> :<div className="employee-overview-main-div">
-    <Table columns={columns} dataSource={data} style={{width:"90%"}}/>
+    <Table columns={columns} dataSource={proj} style={{width:"90%"}}/>
 </div>);
 }
 

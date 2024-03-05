@@ -5,7 +5,7 @@ import { useGetEmployeeOverview } from "../../hooks/useGetEmployeeOverview";
 import { useGetGoals } from "../../hooks/useGetGoals";
 import { useGetPersonalInfo } from "../../hooks/useGetPersonalInfo";
 import { CiCircleMinus, CiCirclePlus } from "react-icons/ci";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddGoalType } from "../../types/AddGoalType";
 import { DeleteGoalType } from "../../types/DeleteGoalType";
 import { useGetCV } from "../../hooks/useGetCVs";
@@ -39,6 +39,33 @@ const ProfileOverview: React.FC = () => {
   const navigate = useNavigate();
   const deleteGoal = useDeleteGoal();
   const addGoal = useAddGoal();
+  const [pers, setPers] = useState<any>();
+  const [empl, setEmpl] = useState<any>();
+  const [go, setGoals] = useState<any>();
+  const [allCvs, setAllCvs] = useState<any>();
+  const [sur, setSur] = useState<any>();
+  const [mat, setMat] = useState<any>();
+
+  useEffect(()=>{
+    if(personalInfo){
+      setPers(personalInfo);
+    }
+    if(employeeData){
+      setEmpl(employeeData);
+    }
+    if(goals){
+      setGoals(goals)
+    }
+    if(cv){
+      setAllCvs(cv);
+    }
+    if(assignedSurveys){
+      setSur(assignedSurveys)
+    }
+    if(assignedSkillsMatrixes){
+      setMat(assignedSkillsMatrixes);
+    }
+  }, [personalInfo, employeeData, goals, cv, assignedSurveys, assignedSkillsMatrixes])
 
   const showModal = () => {
     setIsOpenCVItem(true);
@@ -63,10 +90,11 @@ const ProfileOverview: React.FC = () => {
   };
 
   const handleAddCVItem = (input: AddCVItemType) => {
-    input.CVId = cv.$values[0].CV.Id;
+    input.CVId = allCvs.$values[0].CV.Id;
     console.log(input);
     addCVItem.mutate(input, {onSuccess:()=>{
       console.log("success")
+      setAllCvs([...allCvs, input]);
     }});
     form.resetFields();
   };
@@ -138,34 +166,34 @@ const ProfileOverview: React.FC = () => {
           <div className="line-container">
             <p>
               <span className="font-weight-900">Username:</span>{" "}
-              {personalInfo.userName}
+              {pers?.userName}
             </p>
             <p>
               <span className="font-weight-900">Projects:</span>{" "}
-              {employeeData.find((x: any) => x.key == personalInfo.id).projects}
+              {empl?.find((x: any) => x.key == pers?.id).projects}
             </p>
             <p>
               <span className="font-weight-900">Languages:</span>{" "}
               {
-                employeeData.find((x: any) => x.key == personalInfo.id)
+                empl?.find((x: any) => x.key == pers?.id)
                   .languages
               }
             </p>
             <p>
               <span className="font-weight-900">Skills:</span>{" "}
-              {employeeData.find((x: any) => x.key == personalInfo.id).skills}
+              {empl?.find((x: any) => x.key == pers?.id).skills}
             </p>
             <p>
               <span className="font-weight-900">Utilization:</span>{" "}
               {
-                employeeData.find((x: any) => x.key == personalInfo.id)
+                empl?.find((x: any) => x.key == pers?.id)
                   .utilizationType
               }
             </p>
             <p>
               <span className="font-weight-900">Utilization %:</span>{" "}
               {
-                employeeData.find((x: any) => x.key == personalInfo.id)
+                empl?.find((x: any) => x.key == pers?.id)
                   .utilizationAmount
               }
             </p>
@@ -175,7 +203,7 @@ const ProfileOverview: React.FC = () => {
         <div className="administration-inner-div">
           <h4 style={{ textAlign: "center" }}>MY GOALS</h4>
           <div className="line-container">
-            {goals.map((goal: any) => {
+            {go?.map((goal: any) => {
               return (
                 <p>
                   <span className="font-weight-900 margin-right-1rem">
@@ -200,7 +228,7 @@ const ProfileOverview: React.FC = () => {
               </span>
               <Button
                 onClick={() => {
-                  handleAddGoal(personalInfo.userName);
+                  handleAddGoal(pers?.userName);
                 }}
               >
                 <CiCirclePlus />
@@ -212,7 +240,7 @@ const ProfileOverview: React.FC = () => {
         <div className="administration-inner-div" id="report">
           <h3 style={{ textAlign: "center" }}>CV</h3>
           <h4>Education</h4>
-          {cv?.$values[0]?.CV?.CVItems?.$values?.map((item: any) => {
+          {allCvs?.$values[0]?.CV?.CVItems?.$values?.map((item: any) => {
             {
               if (item.EducationExperienceOrCert == "Education") {
                 return (
@@ -240,7 +268,7 @@ const ProfileOverview: React.FC = () => {
           })}
           <h4>Experience</h4>
 
-          {cv?.$values[0]?.CV?.CVItems?.$values?.map((item: any) => {
+          {allCvs?.$values[0]?.CV?.CVItems?.$values?.map((item: any) => {
             {
               if (item.EducationExperienceOrCert == "Experience") {
                 return (
@@ -269,7 +297,7 @@ const ProfileOverview: React.FC = () => {
 
           <h4>Certification</h4>
 
-          {cv?.$values[0]?.CV?.CVItems?.$values?.map((item: any) => {
+          {allCvs?.$values[0]?.CV?.CVItems?.$values?.map((item: any) => {
             {
               if (item.EducationExperienceOrCert == "Certification") {
                 return (
@@ -375,7 +403,7 @@ const ProfileOverview: React.FC = () => {
 
         <div className="administration-inner-div">
           <h4 style={{ textAlign: "center" }}>SKILLS MATRIX</h4>
-          {assignedSkillsMatrixes.map((x:any)=>{
+          {mat?.map((x:any)=>{
             return <div className="line-container">
             {x.id}  <Button ghost onClick={()=>{navigateToSolver(x.id, 'skillsm')}}>Solve</Button>
           </div>
@@ -384,7 +412,7 @@ const ProfileOverview: React.FC = () => {
 
         <div className="administration-inner-div">
           <h4 style={{ textAlign: "center" }}>SURVEYS</h4>
-          {assignedSurveys.map((x:any)=>{
+          {sur?.map((x:any)=>{
             if(isValid(x.startDate, x.endDate)){
             return <div className="line-container">
               <span className="font-weight-900">{x.id}</span> <Button ghost onClick={()=>{navigateToSolver(x.id, 'survey')}}>Solve</Button>  

@@ -1,17 +1,19 @@
-import { Button, Form, Input, Select, Skeleton } from "antd";
-import { AddProjectType } from "../../types/AddProjectType";
+import { Button, Form, Select, Skeleton } from "antd";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { useGetAllEmployees } from "../../hooks/useGetAllEmployees";
-import { useAddProject } from "../../hooks/useAddProject";
 import { AddLineType } from "../../types/AddLineType";
 import { useAddLine } from "../../hooks/useAddLine";
 
-const AddLineForm = () => {
+interface AddLineFormProps {
+  onSuccess: ()=>void,
+}
+
+const AddLineForm: React.FC<AddLineFormProps> = ({onSuccess}) => {
   const [form] = Form.useForm<AddLineType>();
   const { data, isLoading } = useGetAllEmployees();
   const addLine = useAddLine();
   const onFinish = (values: AddLineType) => {
-    addLine.mutate(values, {onSuccess:()=>{console.log("success")}});
+    addLine.mutate(values, {onSuccess:()=>{onSuccess()}});
   };
   return isLoading ? (
     <Skeleton />

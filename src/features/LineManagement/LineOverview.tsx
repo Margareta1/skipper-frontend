@@ -1,9 +1,9 @@
-import { Button, Form, Input, Modal, Select, Skeleton, Space } from "antd";
+import { Button, Form, Input, Modal, Select, Skeleton } from "antd";
 import { useGetAllLines } from "../../hooks/useGetAllLines";
 import { useGetPersonalInfo } from "../../hooks/useGetPersonalInfo";
 import jsPDF from "jspdf";
 import { FaEdit } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditEmployee from "./EditEmployee";
 import { useGetSkillsMatrixes } from "../../hooks/useGetSkillMatrixes";
 import { useAddSkillsMatrix } from "../../hooks/useAddSkillsMatrix";
@@ -21,6 +21,26 @@ const LineOverview: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [lines, setLines] = useState<any>();
+  const [pers, setPers] = useState<any>();
+  const [sk, setSk] = useState<any>();
+  const [empl, setEmpl]=useState<any>();
+
+
+  useEffect(()=>{
+    if(allLines){
+      setLines(allLines);
+    }
+    if(personalInfo){
+      setPers(personalInfo)
+    }
+    if(skillsM){
+      setSk(skillsM)
+    }
+    if(allEmployees){
+      setEmpl(allEmployees)
+    }
+  }, [allLines, personalInfo, skillsM, allEmployees])
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -91,8 +111,8 @@ const LineOverview: React.FC = () => {
       <div className="administration-inner-div" id="report">
         <h4 style={{ textAlign: "center" }}>EMPLOYEES</h4>
         <div className="line-container">
-          {allLines.map((x: any) => {
-            if (x.lineManager.email === personalInfo.email) {
+          {lines?.map((x: any) => {
+            if (x.lineManager.email === pers?.email) {
               return (
                 <div key={x.lineManager.email}>
                   {x.employees.map((y: any) => {
@@ -238,7 +258,7 @@ const LineOverview: React.FC = () => {
                         textAlignLast: "start",
                       }}
                     >
-                      {allEmployees.map((data: any) => (
+                      {empl?.map((data: any) => (
                         <Select.Option
 
                           key={data.user.email}
@@ -261,7 +281,7 @@ const LineOverview: React.FC = () => {
           </Form>
         </Modal>
         <div className="line-container">
-        {skillsM.map((x:any)=>{
+        {sk?.map((x:any)=>{
           return <div className="single-skills-matrix-p">
             {x.id} - <Button onClick={()=>{handleSeeSkillsMatrix(x.id)}}>See inputs</Button>
           </div>

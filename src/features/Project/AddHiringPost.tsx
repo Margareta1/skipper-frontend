@@ -2,6 +2,7 @@ import { Button, Form, Input, Select, Skeleton } from "antd";
 import { useAddHiringPost } from "../../hooks/useAddHiringPost";
 import { AddHiringPostType } from "../../types/AddHiringPostType";
 import { useGetAllLevelsOfExperience } from "../../hooks/useGetAllLevelfOsExperience";
+import { useEffect, useState } from "react";
 
 interface AddHiringPostProps {
     projectId:string;
@@ -10,6 +11,7 @@ interface AddHiringPostProps {
 const AddHiringPost: React.FC<AddHiringPostProps> =(props) =>{
     const [form]=Form.useForm<AddHiringPostType>();
     const {data:levels, isLoading}=useGetAllLevelsOfExperience();
+    const [lev, setLev]=useState<any>();
     const addPost = useAddHiringPost();
     const onFinish = (values: AddHiringPostType) =>{
         values.CompanyProjectId=props.projectId;
@@ -20,6 +22,12 @@ const AddHiringPost: React.FC<AddHiringPostProps> =(props) =>{
         addPost.mutate(values);
         form.resetFields();
     }
+
+    useEffect(()=>{
+      if(levels){
+        setLev(levels);
+      }
+    },[levels])
     return ( isLoading ? <Skeleton/> :
         <Form
           name="addHiringPostForm"
@@ -36,7 +44,7 @@ const AddHiringPost: React.FC<AddHiringPostProps> =(props) =>{
     
           <Form.Item label="Employee Level of Experience" name="EmployeeLevelOfExperienceId" rules={[{ required: true, message: 'Please enter employee level of experience!' }]}>
             <Select>
-                {levels.map((level:any)=>{
+                {lev?.map((level:any)=>{
                     return <Select.Option key={level.id} value={level.id}>{level.title}</Select.Option>
                 })}
             </Select>

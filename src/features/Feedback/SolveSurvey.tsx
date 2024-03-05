@@ -3,7 +3,7 @@ import { useGetIsSolvedSurvey } from "../../hooks/useGetIsSolvedSurvey";
 import { useGetSurvey } from "../../hooks/useGetSurvey";
 import { Button, Input, Skeleton } from "antd";
 import { SolveSurveyType, TextInputAnswer } from "../../types/SolveSurveyType";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSolveSurvey } from "../../hooks/useSolveSurvey";
 
 const SolveSurvey: React.FC = () => {
@@ -12,6 +12,18 @@ const SolveSurvey: React.FC = () => {
   const { data: survey, isLoading: isLoadingSurvey } = useGetSurvey(id);
   const [userInputs, setUserInputs] = useState<TextInputAnswer[]>([]);
   const solveSurvey = useSolveSurvey();
+  const [sol, setSol] = useState<any>();
+  const [sur, setSur] = useState<any>();
+
+  useEffect(()=>{
+    if(solved){
+      setSol(solved);
+    }
+    if(survey){
+      setSur(survey)
+    }
+
+  }, [solved, survey])
 
   const handleInputChange = (orderKey: number, inputValue: string) => {
     const existingInputIndex = userInputs.findIndex(
@@ -38,7 +50,7 @@ const SolveSurvey: React.FC = () => {
   const handleSubmit = () => {
     const dto: SolveSurveyType = {
       TextInputAnswer: userInputs,
-      SurveyId: survey.survey.survey.id,
+      SurveyId: sur.survey.survey.id,
     };
 
     solveSurvey.mutate(dto, {
@@ -53,11 +65,11 @@ const SolveSurvey: React.FC = () => {
   ) : (
     <div className="dashboard-main-div">
       <div className="administration-inner-div" style={{ width: "50%" }}>
-        {solved ? (
+        {sol ? (
           <div>You have already solved this survey! :D </div>
         ) : (
           <div>
-            {survey.questions
+            {sur?.questions
               .sort((a: any, b: any) => a.orderKey - b.orderKey)
               .map((question: any) => (
                 <div key={question.id} style={{margin:"10px"}}>
